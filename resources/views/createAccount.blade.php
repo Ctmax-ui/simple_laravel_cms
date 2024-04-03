@@ -14,7 +14,7 @@
 
     <a href="/users">Get back</a>
 
-    <form action="{{route("users.store")}}" method="POST" class="d-grid w-25">
+    <form action="{{route("users.store")}}" method="POST" class="d-grid w-25" enctype="multipart/form-data">
         @csrf
         <input name="name" type="text" placeholder="Name" value="{{old('name')}}">
         @error("name")
@@ -30,12 +30,20 @@
         @enderror
         <input name="password" type="text" placeholder="Your password" value="{{old('password')}}">
 
-        <input name="password_confirmation" type="text" placeholder="Confirm password" value="">
+        <input name="password_confirmation" type="text" placeholder="Confirm password" value="{{old('password_confirmation')}}">
         @error("password")
         <span class="text-danger">
             {{$message}}
         </span>
         @enderror
+
+        <input type="file" name="userfile" id="">
+        @error("userfile")
+        <span class="text-danger">
+            {{$message}}
+        </span>
+        @enderror
+
         <input type="submit" value="submit">
     </form>
     
