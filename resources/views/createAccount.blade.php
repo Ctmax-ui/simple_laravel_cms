@@ -37,12 +37,12 @@
         </span>
         @enderror
 
-        <input type="file" name="userfile" id="">
+        {{-- <input type="file" name="userfile" id="">
         @error("userfile")
         <span class="text-danger">
             {{$message}}
         </span>
-        @enderror
+        @enderror --}}
 
         <input type="submit" value="submit">
     </form>

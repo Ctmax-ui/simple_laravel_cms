@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Register;
 class UserController extends Controller
 {
     /**
@@ -40,7 +41,7 @@ class UserController extends Controller
             //there are two ways one is to use '|' and the second is ["",""]
             "name" => 'required|min:3|max:20',
             "email" => ["required", "email","unique:users"],
-            "userfile"=> ["required", "mimes:jpeg,png,jpg", "max:10000"],
+            // "userfile"=> ["required", "mimes:jpeg,png,jpg", "max:10000"],
             "password" => ["required", "min:6", "confirmed"],
             "password_confirmation" => 'required|min:6'
         ], [
@@ -51,18 +52,20 @@ class UserController extends Controller
         ]);
         $fileName=null;
 
-        if($request->hasFile("userfile")){
-            $fileName=time().rand(1,10000)."userfile.".$request->file("userfile")->extension();
-            $request->file("userfile")->storeAs("uploads",$fileName,"public");
-        }
+        // if($request->hasFile("userfile")){
+        //     $fileName=time().rand(1,10000)."userfile.".$request->file("userfile")->extension();
+        //     $request->file("userfile")->storeAs("uploads",$fileName,"public");
+        // }
 
         $result = User::create([
             "name"=>$request->name,
             "email"=>$request->email,
             "password"=>$request->password,
-            "file"=>$fileName
+            // "file"=>$fileName
         ]);
         if($result){
+            Mail::to($request->email)->send(new Register(["name"=>$request->name,
+            "email"=>$request->email]));
             return redirect()->route('users.index')->with("success", "account create successfully.");
         }else{
             return redirect()->route('users.index')->with("success", "please try again later.");
